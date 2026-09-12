@@ -1,0 +1,6 @@
+code,name,descr
+PO_MISMATCH,PO Price/Qty Mismatch,Invoice unit price or quantity differs from the purchase order
+MISSING_GR,Missing Goods Receipt,No matching material document (GR) posted for the PO item
+TAX_VARIANCE,Tax Jurisdiction Variance,GST/HST/PST on invoice does not match expected provincial rate
+CONTRACT_RATE,Contract Rate Variance,Invoiced rate differs from the active MSA pricing schedule
+MISSING_METADATA,Missing Invoice Metadata,PO or company code could not be parsed from tail-spend PDF

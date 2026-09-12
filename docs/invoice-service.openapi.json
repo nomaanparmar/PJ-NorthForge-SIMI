@@ -1,0 +1,5524 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Use the title annotation on your CDS service to provide a meaningful title.",
+    "description": "Use the Core.LongDescription or Core.Description annotation on your CDS service to provide a meaningful description.\n\n## Entity Data Model\n![ER Diagram](https://yuml.me/diagram/class/[InvoiceExceptions{bg:lightslategray}],[InvoiceExceptions]-0..1>[ExceptionTypes],[InvoiceExceptions]-0..1>[RecommendationLogs],[InvoiceExceptions]++-0..1>[DraftAdministrativeData],[InvoiceExceptions]-0..1>[InvoiceExceptions],[InvoiceExceptions]++-*[DRAFT_DraftAdministrativeData_DraftMessage],[Vendors{bg:lightslategray}],[Vendors]0..1-*[InvoiceExceptions],[Vendors]0..1-*[Contracts],[Contracts{bg:lightslategray}],[RecommendationLogs{bg:lightslategray}],[RecommendationLogs]*-0..1[InvoiceExceptions],[ExceptionTypes{bg:lightslategray}],[ExceptionTypes]-*>[ExceptionTypes_texts],[ExceptionTypes]-0..1>[ExceptionTypes_texts],[Kpis{bg:lightslategray}],[DraftAdministrativeData{bg:lightslategray}],[ExceptionTypes_texts{bg:lightslategray}],[DRAFT_DraftAdministrativeData_DraftMessage],[ExceptionTypes_texts%20{bg:lawngreen}]++-*>[ExceptionTypes_texts],[Kpis%20{bg:lawngreen}]++-*>[Kpis],[ExceptionTypes%20{bg:lawngreen}]++-*>[ExceptionTypes],[RecommendationLogs%20{bg:lawngreen}]++-*>[RecommendationLogs],[Contracts%20{bg:lawngreen}]++-*>[Contracts],[Vendors%20{bg:lawngreen}]++-*>[Vendors],[InvoiceExceptions%20{bg:lawngreen}]++-*>[InvoiceExceptions])\n\n### Legend\n![Legend](https://yuml.me/diagram/plain;dir:TB;scale:60/class/[External.Type{bg:whitesmoke}],[ComplexType],[EntityType{bg:lightslategray}],[EntitySet/Singleton/Operation{bg:lawngreen}])",
+    "version": ""
+  },
+  "x-sap-api-type": "ODATAV4",
+  "x-odata-version": "4.01",
+  "x-sap-shortText": "Use the Core.Description annotation on your CDS service to provide a meaningful short text.",
+  "servers": [
+    {
+      "url": "/odata/v4/invoice"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Contracts"
+    },
+    {
+      "name": "Exception Types"
+    },
+    {
+      "name": "Invoice Exceptions"
+    },
+    {
+      "name": "Kpis"
+    },
+    {
+      "name": "Recommendation Logs"
+    },
+    {
+      "name": "Vendors"
+    }
+  ],
+  "paths": {
+    "/$batch": {
+      "post": {
+        "summary": "Sends a group of requests",
+        "description": "Group multiple requests into a single request payload, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).\n\n*Please note that \"Try it out\" is not supported for this request.*",
+        "tags": [
+          "Batch Requests"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Batch request",
+          "content": {
+            "multipart/mixed;boundary=request-separator": {
+              "schema": {
+                "type": "string"
+              },
+              "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET InvoiceExceptions HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch response",
+            "content": {
+              "multipart/mixed": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Contracts": {
+      "get": {
+        "summary": "Retrieves a list of contracts.",
+        "tags": [
+          "Contracts"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "ID desc",
+                  "vendor_ID",
+                  "vendor_ID desc",
+                  "contractNumber",
+                  "contractNumber desc",
+                  "title",
+                  "title desc",
+                  "effectiveFrom",
+                  "effectiveFrom desc",
+                  "effectiveTo",
+                  "effectiveTo desc",
+                  "documentRef",
+                  "documentRef desc",
+                  "ratePerUnit",
+                  "ratePerUnit desc",
+                  "unit",
+                  "unit desc",
+                  "taxClauseSummary",
+                  "taxClauseSummary desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "vendor_ID",
+                  "contractNumber",
+                  "title",
+                  "effectiveFrom",
+                  "effectiveTo",
+                  "documentRef",
+                  "ratePerUnit",
+                  "unit",
+                  "taxClauseSummary"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "vendor"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved contracts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of Contracts",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceService.Contracts"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a single contract.",
+        "tags": [
+          "Contracts"
+        ],
+        "requestBody": {
+          "description": "New contract",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceService.Contracts-create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created contract",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.Contracts"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Contracts({ID})": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a single contract.",
+        "tags": [
+          "Contracts"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "vendor_ID",
+                  "contractNumber",
+                  "title",
+                  "effectiveFrom",
+                  "effectiveTo",
+                  "documentRef",
+                  "ratePerUnit",
+                  "unit",
+                  "taxClauseSummary"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "vendor"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved contract",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.Contracts"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes a single contract.",
+        "tags": [
+          "Contracts"
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceService.Contracts-update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a single contract.",
+        "tags": [
+          "Contracts"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Contracts({ID})/vendor": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves vendor of a contract.",
+        "tags": [
+          "Contracts",
+          "Vendors"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "vendorNumber",
+                  "name",
+                  "province",
+                  "taxId",
+                  "isTailSpend",
+                  "paymentTermsDays",
+                  "earlyPaymentDiscountPct"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "invoices",
+                  "contracts"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved vendor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.Vendors"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/ExceptionTypes": {
+      "get": {
+        "summary": "Retrieves a list of exception types.",
+        "tags": [
+          "Exception Types"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "name",
+                  "name desc",
+                  "descr",
+                  "descr desc",
+                  "code",
+                  "code desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "texts",
+                  "localized"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved exception types",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of ExceptionTypes",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceService.ExceptionTypes"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/ExceptionTypes('{code}')": {
+      "parameters": [
+        {
+          "description": "key: code",
+          "in": "path",
+          "name": "code",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 20
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a single exception type.",
+        "tags": [
+          "Exception Types"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "texts",
+                  "localized"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved exception type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.ExceptionTypes"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/ExceptionTypes('{code}')/localized": {
+      "parameters": [
+        {
+          "description": "key: code",
+          "in": "path",
+          "name": "code",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 20
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves localized of a exception type.",
+        "tags": [
+          "Exception Types",
+          "Exception Types texts"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "locale",
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved localized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.ExceptionTypes_texts"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/ExceptionTypes('{code}')/texts": {
+      "parameters": [
+        {
+          "description": "key: code",
+          "in": "path",
+          "name": "code",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 20
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a list of texts of a exception type.",
+        "tags": [
+          "Exception Types",
+          "Exception Types texts"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "locale",
+                  "locale desc",
+                  "name",
+                  "name desc",
+                  "descr",
+                  "descr desc",
+                  "code",
+                  "code desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "locale",
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved texts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of ExceptionTypes_texts",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceService.ExceptionTypes_texts"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a single text of a exception type.",
+        "tags": [
+          "Exception Types",
+          "Exception Types texts"
+        ],
+        "requestBody": {
+          "description": "New text",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceService.ExceptionTypes_texts-create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.ExceptionTypes_texts"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/ExceptionTypes('{code}')/texts(locale='{locale_1}',code='{code_1}')": {
+      "parameters": [
+        {
+          "description": "key: code",
+          "in": "path",
+          "name": "code",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 20
+          }
+        },
+        {
+          "description": "key: locale",
+          "in": "path",
+          "name": "locale_1",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 14
+          }
+        },
+        {
+          "description": "key: code",
+          "in": "path",
+          "name": "code_1",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 20
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a single text of a exception type.",
+        "tags": [
+          "Exception Types",
+          "Exception Types texts"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "locale",
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.ExceptionTypes_texts"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes a single text of a exception type.",
+        "tags": [
+          "Exception Types"
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceService.ExceptionTypes_texts-update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a single text of a exception type.",
+        "tags": [
+          "Exception Types"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions": {
+      "get": {
+        "summary": "Retrieves a list of invoice exceptions.",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "ID desc",
+                  "createdAt",
+                  "createdAt desc",
+                  "createdBy",
+                  "createdBy desc",
+                  "modifiedAt",
+                  "modifiedAt desc",
+                  "modifiedBy",
+                  "modifiedBy desc",
+                  "invoiceNumber",
+                  "invoiceNumber desc",
+                  "fiscalYear",
+                  "fiscalYear desc",
+                  "companyCode",
+                  "companyCode desc",
+                  "sourceChannel",
+                  "sourceChannel desc",
+                  "vendor_ID",
+                  "vendor_ID desc",
+                  "purchaseOrder",
+                  "purchaseOrder desc",
+                  "purchaseOrderItem",
+                  "purchaseOrderItem desc",
+                  "invoiceDate",
+                  "invoiceDate desc",
+                  "postingDate",
+                  "postingDate desc",
+                  "currency",
+                  "currency desc",
+                  "grossAmount",
+                  "grossAmount desc",
+                  "netAmount",
+                  "netAmount desc",
+                  "taxAmount",
+                  "taxAmount desc",
+                  "taxJurisdiction",
+                  "taxJurisdiction desc",
+                  "taxCodeOnInvoice",
+                  "taxCodeOnInvoice desc",
+                  "taxCodeExpected",
+                  "taxCodeExpected desc",
+                  "exceptionType_code",
+                  "exceptionType_code desc",
+                  "exceptionReasonText",
+                  "exceptionReasonText desc",
+                  "extractedPayload",
+                  "extractedPayload desc",
+                  "extractionConfidence",
+                  "extractionConfidence desc",
+                  "aiRecommendation_ID",
+                  "aiRecommendation_ID desc",
+                  "status",
+                  "status desc",
+                  "confidenceScore",
+                  "confidenceScore desc",
+                  "slaDueAt",
+                  "slaDueAt desc",
+                  "assignedTo",
+                  "assignedTo desc",
+                  "clerkDecision",
+                  "clerkDecision desc",
+                  "clerkComment",
+                  "clerkComment desc",
+                  "statusCriticality",
+                  "statusCriticality desc",
+                  "IsActiveEntity",
+                  "IsActiveEntity desc",
+                  "HasActiveEntity",
+                  "HasActiveEntity desc",
+                  "HasDraftEntity",
+                  "HasDraftEntity desc",
+                  "DraftMessages/code",
+                  "DraftMessages/code desc",
+                  "DraftMessages/message",
+                  "DraftMessages/message desc",
+                  "DraftMessages/target",
+                  "DraftMessages/target desc",
+                  "DraftMessages/additionalTargets",
+                  "DraftMessages/additionalTargets desc",
+                  "DraftMessages/transition",
+                  "DraftMessages/transition desc",
+                  "DraftMessages/numericSeverity",
+                  "DraftMessages/numericSeverity desc",
+                  "DraftMessages/longtextUrl",
+                  "DraftMessages/longtextUrl desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "createdAt",
+                  "createdBy",
+                  "modifiedAt",
+                  "modifiedBy",
+                  "invoiceNumber",
+                  "fiscalYear",
+                  "companyCode",
+                  "sourceChannel",
+                  "vendor_ID",
+                  "purchaseOrder",
+                  "purchaseOrderItem",
+                  "invoiceDate",
+                  "postingDate",
+                  "currency",
+                  "grossAmount",
+                  "netAmount",
+                  "taxAmount",
+                  "taxJurisdiction",
+                  "taxCodeOnInvoice",
+                  "taxCodeExpected",
+                  "exceptionType_code",
+                  "exceptionReasonText",
+                  "extractedPayload",
+                  "extractionConfidence",
+                  "aiRecommendation_ID",
+                  "status",
+                  "confidenceScore",
+                  "slaDueAt",
+                  "assignedTo",
+                  "clerkDecision",
+                  "clerkComment",
+                  "statusCriticality",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity",
+                  "DraftMessages"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "vendor",
+                  "exceptionType",
+                  "aiRecommendation",
+                  "recommendations",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved invoice exceptions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of InvoiceExceptions",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a single invoice exception.",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "requestBody": {
+          "description": "New invoice exception",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions-create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created invoice exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a single invoice exception.",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "createdAt",
+                  "createdBy",
+                  "modifiedAt",
+                  "modifiedBy",
+                  "invoiceNumber",
+                  "fiscalYear",
+                  "companyCode",
+                  "sourceChannel",
+                  "vendor_ID",
+                  "purchaseOrder",
+                  "purchaseOrderItem",
+                  "invoiceDate",
+                  "postingDate",
+                  "currency",
+                  "grossAmount",
+                  "netAmount",
+                  "taxAmount",
+                  "taxJurisdiction",
+                  "taxCodeOnInvoice",
+                  "taxCodeExpected",
+                  "exceptionType_code",
+                  "exceptionReasonText",
+                  "extractedPayload",
+                  "extractionConfidence",
+                  "aiRecommendation_ID",
+                  "status",
+                  "confidenceScore",
+                  "slaDueAt",
+                  "assignedTo",
+                  "clerkDecision",
+                  "clerkComment",
+                  "statusCriticality",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity",
+                  "DraftMessages"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "vendor",
+                  "exceptionType",
+                  "aiRecommendation",
+                  "recommendations",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved invoice exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes a single invoice exception.",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions-update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a single invoice exception.",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/DraftAdministrativeData": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves draft administrative data of a invoice exception.",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DraftUUID",
+                  "CreationDateTime",
+                  "CreatedByUser",
+                  "DraftIsCreatedByMe",
+                  "LastChangeDateTime",
+                  "LastChangedByUser",
+                  "InProcessByUser",
+                  "DraftIsProcessedByMe"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved draft administrative data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.DraftAdministrativeData"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes draft administrative data of a invoice exception.",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceService.DraftAdministrativeData-update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes draft administrative data of a invoice exception.",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/InvoiceService.approve": {
+      "post": {
+        "summary": "Invokes action approve",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Action parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/InvoiceService.draftActivate": {
+      "post": {
+        "summary": "Invokes action draftActivate",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/InvoiceService.draftEdit": {
+      "post": {
+        "summary": "Invokes action draftEdit",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Action parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "PreserveChanges": {
+                    "type": "boolean",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/InvoiceService.draftPrepare": {
+      "post": {
+        "summary": "Invokes action draftPrepare",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Action parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "SideEffectsQualifier": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/InvoiceService.edit": {
+      "post": {
+        "summary": "Invokes action edit",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Action parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "correctedNetAmount": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "format": "decimal",
+                        "multipleOf": 0.01,
+                        "maximum": 9999999999999.99,
+                        "minimum": -9999999999999.99
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "example": 0,
+                    "x-sap-precision": 15,
+                    "x-sap-scale": 2,
+                    "nullable": true
+                  },
+                  "correctedTaxCode": {
+                    "type": "string",
+                    "maxLength": 4,
+                    "nullable": true
+                  },
+                  "comment": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/InvoiceService.rejectInvoice": {
+      "post": {
+        "summary": "Invokes action rejectInvoice",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Action parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/InvoiceService.retriage": {
+      "post": {
+        "summary": "Invokes action retriage",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "parameters": [
+          {
+            "description": "key: ID",
+            "in": "path",
+            "name": "ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "01234567-89ab-cdef-0123-456789abcdef"
+            }
+          },
+          {
+            "description": "key: IsActiveEntity",
+            "in": "path",
+            "name": "IsActiveEntity",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/SiblingEntity": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves sibling entity of a invoice exception.",
+        "tags": [
+          "Invoice Exceptions"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "createdAt",
+                  "createdBy",
+                  "modifiedAt",
+                  "modifiedBy",
+                  "invoiceNumber",
+                  "fiscalYear",
+                  "companyCode",
+                  "sourceChannel",
+                  "vendor_ID",
+                  "purchaseOrder",
+                  "purchaseOrderItem",
+                  "invoiceDate",
+                  "postingDate",
+                  "currency",
+                  "grossAmount",
+                  "netAmount",
+                  "taxAmount",
+                  "taxJurisdiction",
+                  "taxCodeOnInvoice",
+                  "taxCodeExpected",
+                  "exceptionType_code",
+                  "exceptionReasonText",
+                  "extractedPayload",
+                  "extractionConfidence",
+                  "aiRecommendation_ID",
+                  "status",
+                  "confidenceScore",
+                  "slaDueAt",
+                  "assignedTo",
+                  "clerkDecision",
+                  "clerkComment",
+                  "statusCriticality",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity",
+                  "DraftMessages"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "vendor",
+                  "exceptionType",
+                  "aiRecommendation",
+                  "recommendations",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved sibling entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/aiRecommendation": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves ai recommendation of a invoice exception.",
+        "tags": [
+          "Invoice Exceptions",
+          "Recommendation Logs"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "invoice_ID",
+                  "step",
+                  "agentAction",
+                  "timestamp",
+                  "model",
+                  "promptText",
+                  "responseText",
+                  "groundingSources",
+                  "reasoningTrace",
+                  "confidence",
+                  "outcome",
+                  "humanUser"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "invoice"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved ai recommendation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.RecommendationLogs"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/exceptionType": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves exception type of a invoice exception.",
+        "tags": [
+          "Invoice Exceptions",
+          "Exception Types"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "name",
+                  "descr",
+                  "code"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "texts",
+                  "localized"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved exception type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.ExceptionTypes"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/recommendations": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a list of recommendations of a invoice exception.",
+        "tags": [
+          "Invoice Exceptions",
+          "Recommendation Logs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "ID desc",
+                  "invoice_ID",
+                  "invoice_ID desc",
+                  "step",
+                  "step desc",
+                  "agentAction",
+                  "agentAction desc",
+                  "timestamp",
+                  "timestamp desc",
+                  "model",
+                  "model desc",
+                  "promptText",
+                  "promptText desc",
+                  "responseText",
+                  "responseText desc",
+                  "groundingSources",
+                  "groundingSources desc",
+                  "reasoningTrace",
+                  "reasoningTrace desc",
+                  "confidence",
+                  "confidence desc",
+                  "outcome",
+                  "outcome desc",
+                  "humanUser",
+                  "humanUser desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "invoice_ID",
+                  "step",
+                  "agentAction",
+                  "timestamp",
+                  "model",
+                  "promptText",
+                  "responseText",
+                  "groundingSources",
+                  "reasoningTrace",
+                  "confidence",
+                  "outcome",
+                  "humanUser"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "invoice"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved recommendations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of RecommendationLogs",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceService.RecommendationLogs"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/InvoiceExceptions(ID={ID},IsActiveEntity='{IsActiveEntity}')/vendor": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        {
+          "description": "key: IsActiveEntity",
+          "in": "path",
+          "name": "IsActiveEntity",
+          "required": true,
+          "schema": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves vendor of a invoice exception.",
+        "tags": [
+          "Invoice Exceptions",
+          "Vendors"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "vendorNumber",
+                  "name",
+                  "province",
+                  "taxId",
+                  "isTailSpend",
+                  "paymentTermsDays",
+                  "earlyPaymentDiscountPct"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "invoices",
+                  "contracts"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved vendor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.Vendors"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Kpis": {
+      "get": {
+        "summary": "Retrieves a list of kpis.",
+        "tags": [
+          "Kpis"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "status",
+                  "status desc",
+                  "count",
+                  "count desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "status",
+                  "count"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved kpis",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of Kpis",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceService.Kpis"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Kpis('{status}')": {
+      "parameters": [
+        {
+          "description": "key: status",
+          "in": "path",
+          "name": "status",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "NEW",
+              "INVESTIGATING",
+              "AUTO_RESOLVED",
+              "ROUTED_TO_CLERK",
+              "ESCALATED",
+              "APPROVED",
+              "REJECTED",
+              "POSTED"
+            ],
+            "default": "NEW"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a single kpi.",
+        "tags": [
+          "Kpis"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "status",
+                  "count"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved kpi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.Kpis"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/RecommendationLogs": {
+      "get": {
+        "summary": "Retrieves a list of recommendation logs.",
+        "tags": [
+          "Recommendation Logs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "ID desc",
+                  "invoice_ID",
+                  "invoice_ID desc",
+                  "step",
+                  "step desc",
+                  "agentAction",
+                  "agentAction desc",
+                  "timestamp",
+                  "timestamp desc",
+                  "model",
+                  "model desc",
+                  "promptText",
+                  "promptText desc",
+                  "responseText",
+                  "responseText desc",
+                  "groundingSources",
+                  "groundingSources desc",
+                  "reasoningTrace",
+                  "reasoningTrace desc",
+                  "confidence",
+                  "confidence desc",
+                  "outcome",
+                  "outcome desc",
+                  "humanUser",
+                  "humanUser desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "invoice_ID",
+                  "step",
+                  "agentAction",
+                  "timestamp",
+                  "model",
+                  "promptText",
+                  "responseText",
+                  "groundingSources",
+                  "reasoningTrace",
+                  "confidence",
+                  "outcome",
+                  "humanUser"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "invoice"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved recommendation logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of RecommendationLogs",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceService.RecommendationLogs"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/RecommendationLogs({ID})": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a single recommendation log.",
+        "tags": [
+          "Recommendation Logs"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "invoice_ID",
+                  "step",
+                  "agentAction",
+                  "timestamp",
+                  "model",
+                  "promptText",
+                  "responseText",
+                  "groundingSources",
+                  "reasoningTrace",
+                  "confidence",
+                  "outcome",
+                  "humanUser"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "invoice"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved recommendation log",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.RecommendationLogs"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/RecommendationLogs({ID})/invoice": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves invoice of a recommendation log.",
+        "tags": [
+          "Recommendation Logs",
+          "Invoice Exceptions"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "createdAt",
+                  "createdBy",
+                  "modifiedAt",
+                  "modifiedBy",
+                  "invoiceNumber",
+                  "fiscalYear",
+                  "companyCode",
+                  "sourceChannel",
+                  "vendor_ID",
+                  "purchaseOrder",
+                  "purchaseOrderItem",
+                  "invoiceDate",
+                  "postingDate",
+                  "currency",
+                  "grossAmount",
+                  "netAmount",
+                  "taxAmount",
+                  "taxJurisdiction",
+                  "taxCodeOnInvoice",
+                  "taxCodeExpected",
+                  "exceptionType_code",
+                  "exceptionReasonText",
+                  "extractedPayload",
+                  "extractionConfidence",
+                  "aiRecommendation_ID",
+                  "status",
+                  "confidenceScore",
+                  "slaDueAt",
+                  "assignedTo",
+                  "clerkDecision",
+                  "clerkComment",
+                  "statusCriticality",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity",
+                  "DraftMessages"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "vendor",
+                  "exceptionType",
+                  "aiRecommendation",
+                  "recommendations",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved invoice",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Vendors": {
+      "get": {
+        "summary": "Retrieves a list of vendors.",
+        "tags": [
+          "Vendors"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "ID desc",
+                  "vendorNumber",
+                  "vendorNumber desc",
+                  "name",
+                  "name desc",
+                  "province",
+                  "province desc",
+                  "taxId",
+                  "taxId desc",
+                  "isTailSpend",
+                  "isTailSpend desc",
+                  "paymentTermsDays",
+                  "paymentTermsDays desc",
+                  "earlyPaymentDiscountPct",
+                  "earlyPaymentDiscountPct desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "vendorNumber",
+                  "name",
+                  "province",
+                  "taxId",
+                  "isTailSpend",
+                  "paymentTermsDays",
+                  "earlyPaymentDiscountPct"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "invoices",
+                  "contracts"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved vendors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of Vendors",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceService.Vendors"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a single vendor.",
+        "tags": [
+          "Vendors"
+        ],
+        "requestBody": {
+          "description": "New vendor",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceService.Vendors-create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created vendor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.Vendors"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Vendors({ID})": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a single vendor.",
+        "tags": [
+          "Vendors"
+        ],
+        "parameters": [
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "vendorNumber",
+                  "name",
+                  "province",
+                  "taxId",
+                  "isTailSpend",
+                  "paymentTermsDays",
+                  "earlyPaymentDiscountPct"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "invoices",
+                  "contracts"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved vendor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.Vendors"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes a single vendor.",
+        "tags": [
+          "Vendors"
+        ],
+        "requestBody": {
+          "description": "New property values",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceService.Vendors-update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a single vendor.",
+        "tags": [
+          "Vendors"
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Vendors({ID})/contracts": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a list of contracts of a vendor.",
+        "tags": [
+          "Vendors",
+          "Contracts"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "ID desc",
+                  "vendor_ID",
+                  "vendor_ID desc",
+                  "contractNumber",
+                  "contractNumber desc",
+                  "title",
+                  "title desc",
+                  "effectiveFrom",
+                  "effectiveFrom desc",
+                  "effectiveTo",
+                  "effectiveTo desc",
+                  "documentRef",
+                  "documentRef desc",
+                  "ratePerUnit",
+                  "ratePerUnit desc",
+                  "unit",
+                  "unit desc",
+                  "taxClauseSummary",
+                  "taxClauseSummary desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "vendor_ID",
+                  "contractNumber",
+                  "title",
+                  "effectiveFrom",
+                  "effectiveTo",
+                  "documentRef",
+                  "ratePerUnit",
+                  "unit",
+                  "taxClauseSummary"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "vendor"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved contracts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of Contracts",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceService.Contracts"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a single contract of a vendor.",
+        "tags": [
+          "Vendors",
+          "Contracts"
+        ],
+        "requestBody": {
+          "description": "New contract",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceService.Contracts-create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created contract",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.Contracts"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/Vendors({ID})/invoices": {
+      "parameters": [
+        {
+          "description": "key: ID",
+          "in": "path",
+          "name": "ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a list of invoices of a vendor.",
+        "tags": [
+          "Vendors",
+          "Invoice Exceptions"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "$ref": "#/components/parameters/search"
+          },
+          {
+            "name": "$filter",
+            "description": "Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "description": "Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "ID desc",
+                  "createdAt",
+                  "createdAt desc",
+                  "createdBy",
+                  "createdBy desc",
+                  "modifiedAt",
+                  "modifiedAt desc",
+                  "modifiedBy",
+                  "modifiedBy desc",
+                  "invoiceNumber",
+                  "invoiceNumber desc",
+                  "fiscalYear",
+                  "fiscalYear desc",
+                  "companyCode",
+                  "companyCode desc",
+                  "sourceChannel",
+                  "sourceChannel desc",
+                  "vendor_ID",
+                  "vendor_ID desc",
+                  "purchaseOrder",
+                  "purchaseOrder desc",
+                  "purchaseOrderItem",
+                  "purchaseOrderItem desc",
+                  "invoiceDate",
+                  "invoiceDate desc",
+                  "postingDate",
+                  "postingDate desc",
+                  "currency",
+                  "currency desc",
+                  "grossAmount",
+                  "grossAmount desc",
+                  "netAmount",
+                  "netAmount desc",
+                  "taxAmount",
+                  "taxAmount desc",
+                  "taxJurisdiction",
+                  "taxJurisdiction desc",
+                  "taxCodeOnInvoice",
+                  "taxCodeOnInvoice desc",
+                  "taxCodeExpected",
+                  "taxCodeExpected desc",
+                  "exceptionType_code",
+                  "exceptionType_code desc",
+                  "exceptionReasonText",
+                  "exceptionReasonText desc",
+                  "extractedPayload",
+                  "extractedPayload desc",
+                  "extractionConfidence",
+                  "extractionConfidence desc",
+                  "aiRecommendation_ID",
+                  "aiRecommendation_ID desc",
+                  "status",
+                  "status desc",
+                  "confidenceScore",
+                  "confidenceScore desc",
+                  "slaDueAt",
+                  "slaDueAt desc",
+                  "assignedTo",
+                  "assignedTo desc",
+                  "clerkDecision",
+                  "clerkDecision desc",
+                  "clerkComment",
+                  "clerkComment desc",
+                  "statusCriticality",
+                  "statusCriticality desc",
+                  "IsActiveEntity",
+                  "IsActiveEntity desc",
+                  "HasActiveEntity",
+                  "HasActiveEntity desc",
+                  "HasDraftEntity",
+                  "HasDraftEntity desc",
+                  "DraftMessages/code",
+                  "DraftMessages/code desc",
+                  "DraftMessages/message",
+                  "DraftMessages/message desc",
+                  "DraftMessages/target",
+                  "DraftMessages/target desc",
+                  "DraftMessages/additionalTargets",
+                  "DraftMessages/additionalTargets desc",
+                  "DraftMessages/transition",
+                  "DraftMessages/transition desc",
+                  "DraftMessages/numericSeverity",
+                  "DraftMessages/numericSeverity desc",
+                  "DraftMessages/longtextUrl",
+                  "DraftMessages/longtextUrl desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "description": "Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ID",
+                  "createdAt",
+                  "createdBy",
+                  "modifiedAt",
+                  "modifiedBy",
+                  "invoiceNumber",
+                  "fiscalYear",
+                  "companyCode",
+                  "sourceChannel",
+                  "vendor_ID",
+                  "purchaseOrder",
+                  "purchaseOrderItem",
+                  "invoiceDate",
+                  "postingDate",
+                  "currency",
+                  "grossAmount",
+                  "netAmount",
+                  "taxAmount",
+                  "taxJurisdiction",
+                  "taxCodeOnInvoice",
+                  "taxCodeExpected",
+                  "exceptionType_code",
+                  "exceptionReasonText",
+                  "extractedPayload",
+                  "extractionConfidence",
+                  "aiRecommendation_ID",
+                  "status",
+                  "confidenceScore",
+                  "slaDueAt",
+                  "assignedTo",
+                  "clerkDecision",
+                  "clerkComment",
+                  "statusCriticality",
+                  "IsActiveEntity",
+                  "HasActiveEntity",
+                  "HasDraftEntity",
+                  "DraftMessages"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "description": "The value of $expand query option is a comma-separated list of navigation property names, stream property names, or $value indicating the stream content of a media-entity. The corresponding related entities and stream values will be represented inline, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "*",
+                  "vendor",
+                  "exceptionType",
+                  "aiRecommendation",
+                  "recommendations",
+                  "DraftAdministrativeData",
+                  "SiblingEntity"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved invoices",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Collection of InvoiceExceptions",
+                  "properties": {
+                    "@count": {
+                      "$ref": "#/components/schemas/count"
+                    },
+                    "value": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a single invoice of a vendor.",
+        "tags": [
+          "Vendors",
+          "Invoice Exceptions"
+        ],
+        "requestBody": {
+          "description": "New invoice",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions-create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created invoice",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "InvoiceService.Contracts": {
+        "title": "Contracts",
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "vendor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceService.Vendors"
+              }
+            ],
+            "nullable": true
+          },
+          "vendor_ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef",
+            "nullable": true
+          },
+          "contractNumber": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "documentRef": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          },
+          "ratePerUnit": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "taxClauseSummary": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.Contracts-create": {
+        "title": "Contracts (for create)",
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "vendor_ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef",
+            "nullable": true
+          },
+          "contractNumber": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "documentRef": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          },
+          "ratePerUnit": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "taxClauseSummary": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.Contracts-update": {
+        "title": "Contracts (for update)",
+        "type": "object",
+        "properties": {
+          "vendor_ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef",
+            "nullable": true
+          },
+          "contractNumber": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "documentRef": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          },
+          "ratePerUnit": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "taxClauseSummary": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.DRAFT_DraftAdministrativeData_DraftMessage": {
+        "title": "DRAFT_DraftAdministrativeData_DraftMessage",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "target": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalTargets": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          "transition": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "numericSeverity": {
+            "type": "integer",
+            "format": "uint8",
+            "nullable": true
+          },
+          "longtextUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.DraftAdministrativeData": {
+        "title": "DraftAdministrativeData",
+        "type": "object",
+        "properties": {
+          "DraftUUID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "CreationDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "CreatedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsCreatedByMe": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "LastChangeDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "LastChangedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "InProcessByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsProcessedByMe": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.DraftAdministrativeData-create": {
+        "title": "DraftAdministrativeData (for create)",
+        "type": "object",
+        "properties": {
+          "DraftUUID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "CreationDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "CreatedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsCreatedByMe": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "LastChangeDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "LastChangedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "InProcessByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsProcessedByMe": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.DraftAdministrativeData-update": {
+        "title": "DraftAdministrativeData (for update)",
+        "type": "object",
+        "properties": {
+          "CreationDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "CreatedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsCreatedByMe": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "LastChangeDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "LastChangedByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "InProcessByUser": {
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "DraftIsProcessedByMe": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.ExceptionTypes": {
+        "title": "ExceptionTypes",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "descr": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "texts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoiceService.ExceptionTypes_texts"
+            }
+          },
+          "texts@count": {
+            "$ref": "#/components/schemas/count"
+          },
+          "localized": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceService.ExceptionTypes_texts"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.ExceptionTypes_texts": {
+        "title": "ExceptionTypes_texts",
+        "type": "object",
+        "properties": {
+          "locale": {
+            "type": "string",
+            "maxLength": 14
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "descr": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 20
+          }
+        }
+      },
+      "InvoiceService.ExceptionTypes_texts-create": {
+        "title": "ExceptionTypes_texts (for create)",
+        "type": "object",
+        "properties": {
+          "locale": {
+            "type": "string",
+            "maxLength": 14
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "descr": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 20
+          }
+        },
+        "required": [
+          "locale",
+          "code"
+        ]
+      },
+      "InvoiceService.ExceptionTypes_texts-update": {
+        "title": "ExceptionTypes_texts (for update)",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "descr": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.InvoiceExceptions": {
+        "title": "InvoiceExceptions",
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "description": "{i18n>UserID.Description}"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04.0000000Z",
+            "nullable": true
+          },
+          "modifiedBy": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "description": "{i18n>UserID.Description}"
+          },
+          "invoiceNumber": {
+            "type": "string",
+            "maxLength": 16,
+            "nullable": true
+          },
+          "fiscalYear": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "companyCode": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "sourceChannel": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": [
+              "EDI",
+              "ARIBA",
+              "EMAIL_PDF"
+            ],
+            "nullable": true
+          },
+          "vendor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceService.Vendors"
+              }
+            ],
+            "nullable": true
+          },
+          "vendor_ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef",
+            "nullable": true
+          },
+          "purchaseOrder": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "purchaseOrderItem": {
+            "type": "string",
+            "maxLength": 5,
+            "nullable": true
+          },
+          "invoiceDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "postingDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "maxLength": 3,
+            "nullable": true
+          },
+          "grossAmount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "netAmount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "taxAmount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "taxJurisdiction": {
+            "type": "string",
+            "maxLength": 2,
+            "nullable": true
+          },
+          "taxCodeOnInvoice": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "taxCodeExpected": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "exceptionType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceService.ExceptionTypes"
+              }
+            ],
+            "nullable": true
+          },
+          "exceptionType_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "exceptionReasonText": {
+            "type": "string",
+            "maxLength": 500,
+            "nullable": true
+          },
+          "extractedPayload": {
+            "type": "string",
+            "nullable": true
+          },
+          "extractionConfidence": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9.99,
+                "minimum": -9.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 3,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "aiRecommendation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceService.RecommendationLogs"
+              }
+            ],
+            "nullable": true
+          },
+          "aiRecommendation_ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "NEW",
+              "INVESTIGATING",
+              "AUTO_RESOLVED",
+              "ROUTED_TO_CLERK",
+              "ESCALATED",
+              "APPROVED",
+              "REJECTED",
+              "POSTED"
+            ],
+            "nullable": true,
+            "default": "NEW"
+          },
+          "confidenceScore": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9.99,
+                "minimum": -9.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 3,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "slaDueAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04Z",
+            "nullable": true
+          },
+          "assignedTo": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "clerkDecision": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": [
+              "APPROVE",
+              "REJECT",
+              "EDIT"
+            ],
+            "nullable": true
+          },
+          "clerkComment": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoiceService.RecommendationLogs"
+            }
+          },
+          "recommendations@count": {
+            "$ref": "#/components/schemas/count"
+          },
+          "statusCriticality": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "IsActiveEntity": {
+            "type": "boolean",
+            "default": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceService.DraftAdministrativeData"
+              }
+            ],
+            "nullable": true
+          },
+          "SiblingEntity": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+              }
+            ],
+            "nullable": true
+          },
+          "DraftMessages": {
+            "type": "array",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/InvoiceService.DRAFT_DraftAdministrativeData_DraftMessage"
+                }
+              ],
+              "nullable": true
+            }
+          }
+        }
+      },
+      "InvoiceService.InvoiceExceptions-create": {
+        "title": "InvoiceExceptions (for create)",
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "invoiceNumber": {
+            "type": "string",
+            "maxLength": 16,
+            "nullable": true
+          },
+          "fiscalYear": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "companyCode": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "sourceChannel": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": [
+              "EDI",
+              "ARIBA",
+              "EMAIL_PDF"
+            ],
+            "nullable": true
+          },
+          "vendor_ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef",
+            "nullable": true
+          },
+          "purchaseOrder": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "purchaseOrderItem": {
+            "type": "string",
+            "maxLength": 5,
+            "nullable": true
+          },
+          "invoiceDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "postingDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "maxLength": 3,
+            "nullable": true
+          },
+          "grossAmount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "netAmount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "taxAmount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "taxJurisdiction": {
+            "type": "string",
+            "maxLength": 2,
+            "nullable": true
+          },
+          "taxCodeOnInvoice": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "taxCodeExpected": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "exceptionType_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "exceptionReasonText": {
+            "type": "string",
+            "maxLength": 500,
+            "nullable": true
+          },
+          "extractedPayload": {
+            "type": "string",
+            "nullable": true
+          },
+          "extractionConfidence": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9.99,
+                "minimum": -9.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 3,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "aiRecommendation_ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "NEW",
+              "INVESTIGATING",
+              "AUTO_RESOLVED",
+              "ROUTED_TO_CLERK",
+              "ESCALATED",
+              "APPROVED",
+              "REJECTED",
+              "POSTED"
+            ],
+            "nullable": true,
+            "default": "NEW"
+          },
+          "confidenceScore": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9.99,
+                "minimum": -9.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 3,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "slaDueAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04Z",
+            "nullable": true
+          },
+          "assignedTo": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "clerkDecision": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": [
+              "APPROVE",
+              "REJECT",
+              "EDIT"
+            ],
+            "nullable": true
+          },
+          "clerkComment": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "IsActiveEntity": {
+            "type": "boolean",
+            "default": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceService.DraftAdministrativeData-create"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "IsActiveEntity"
+        ]
+      },
+      "InvoiceService.InvoiceExceptions-update": {
+        "title": "InvoiceExceptions (for update)",
+        "type": "object",
+        "properties": {
+          "invoiceNumber": {
+            "type": "string",
+            "maxLength": 16,
+            "nullable": true
+          },
+          "fiscalYear": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "companyCode": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "sourceChannel": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": [
+              "EDI",
+              "ARIBA",
+              "EMAIL_PDF"
+            ],
+            "nullable": true
+          },
+          "vendor_ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef",
+            "nullable": true
+          },
+          "purchaseOrder": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "purchaseOrderItem": {
+            "type": "string",
+            "maxLength": 5,
+            "nullable": true
+          },
+          "invoiceDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "postingDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2017-04-13",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "maxLength": 3,
+            "nullable": true
+          },
+          "grossAmount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "netAmount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "taxAmount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9999999999999.99,
+                "minimum": -9999999999999.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 15,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "taxJurisdiction": {
+            "type": "string",
+            "maxLength": 2,
+            "nullable": true
+          },
+          "taxCodeOnInvoice": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "taxCodeExpected": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "exceptionType_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "exceptionReasonText": {
+            "type": "string",
+            "maxLength": 500,
+            "nullable": true
+          },
+          "extractedPayload": {
+            "type": "string",
+            "nullable": true
+          },
+          "extractionConfidence": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9.99,
+                "minimum": -9.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 3,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "aiRecommendation_ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "NEW",
+              "INVESTIGATING",
+              "AUTO_RESOLVED",
+              "ROUTED_TO_CLERK",
+              "ESCALATED",
+              "APPROVED",
+              "REJECTED",
+              "POSTED"
+            ],
+            "nullable": true,
+            "default": "NEW"
+          },
+          "confidenceScore": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9.99,
+                "minimum": -9.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 3,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "slaDueAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04Z",
+            "nullable": true
+          },
+          "assignedTo": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "clerkDecision": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": [
+              "APPROVE",
+              "REJECT",
+              "EDIT"
+            ],
+            "nullable": true
+          },
+          "clerkComment": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "HasActiveEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "HasDraftEntity": {
+            "type": "boolean",
+            "default": false
+          },
+          "DraftAdministrativeData": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceService.DraftAdministrativeData-create"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.Kpis": {
+        "title": "Kpis",
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "NEW",
+              "INVESTIGATING",
+              "AUTO_RESOLVED",
+              "ROUTED_TO_CLERK",
+              "ESCALATED",
+              "APPROVED",
+              "REJECTED",
+              "POSTED"
+            ],
+            "default": "NEW"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.RecommendationLogs": {
+        "title": "RecommendationLogs",
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "invoice": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+              }
+            ],
+            "nullable": true
+          },
+          "invoice_ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef",
+            "nullable": true
+          },
+          "step": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "agentAction": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "FETCH_PO",
+              "FETCH_GR",
+              "FETCH_CONTRACT",
+              "RECOMPUTE_TAX",
+              "CHECK_VENDOR_HISTORY",
+              "PROPOSE_RESOLUTION",
+              "ROUTE_TO_HUMAN",
+              "ESCALATE",
+              "HUMAN_DECISION"
+            ],
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2017-04-13T15:51:04Z",
+            "nullable": true
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "promptText": {
+            "type": "string",
+            "nullable": true
+          },
+          "responseText": {
+            "type": "string",
+            "nullable": true
+          },
+          "groundingSources": {
+            "type": "string",
+            "nullable": true
+          },
+          "reasoningTrace": {
+            "type": "string",
+            "nullable": true
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 9.99,
+                "minimum": -9.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 3,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "humanUser": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.Vendors": {
+        "title": "Vendors",
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "vendorNumber": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "maxLength": 2,
+            "nullable": true
+          },
+          "taxId": {
+            "type": "string",
+            "maxLength": 15,
+            "nullable": true
+          },
+          "isTailSpend": {
+            "type": "boolean",
+            "nullable": true,
+            "default": false
+          },
+          "paymentTermsDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "earlyPaymentDiscountPct": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 99.99,
+                "minimum": -99.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 4,
+            "x-sap-scale": 2,
+            "nullable": true
+          },
+          "invoices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoiceService.InvoiceExceptions"
+            }
+          },
+          "invoices@count": {
+            "$ref": "#/components/schemas/count"
+          },
+          "contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoiceService.Contracts"
+            }
+          },
+          "contracts@count": {
+            "$ref": "#/components/schemas/count"
+          }
+        }
+      },
+      "InvoiceService.Vendors-create": {
+        "title": "Vendors (for create)",
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "vendorNumber": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "maxLength": 2,
+            "nullable": true
+          },
+          "taxId": {
+            "type": "string",
+            "maxLength": 15,
+            "nullable": true
+          },
+          "isTailSpend": {
+            "type": "boolean",
+            "nullable": true,
+            "default": false
+          },
+          "paymentTermsDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "earlyPaymentDiscountPct": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 99.99,
+                "minimum": -99.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 4,
+            "x-sap-scale": 2,
+            "nullable": true
+          }
+        }
+      },
+      "InvoiceService.Vendors-update": {
+        "title": "Vendors (for update)",
+        "type": "object",
+        "properties": {
+          "vendorNumber": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "maxLength": 2,
+            "nullable": true
+          },
+          "taxId": {
+            "type": "string",
+            "maxLength": 15,
+            "nullable": true
+          },
+          "isTailSpend": {
+            "type": "boolean",
+            "nullable": true,
+            "default": false
+          },
+          "paymentTermsDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "earlyPaymentDiscountPct": {
+            "anyOf": [
+              {
+                "type": "number",
+                "format": "decimal",
+                "multipleOf": 0.01,
+                "maximum": 99.99,
+                "minimum": -99.99
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": 0,
+            "x-sap-precision": 4,
+            "x-sap-scale": 2,
+            "nullable": true
+          }
+        }
+      },
+      "count": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "description": "The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option."
+      },
+      "error": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string"
+              },
+              "details": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "target": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "innererror": {
+                "type": "object",
+                "description": "The structure of this object is service-specific"
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "top": {
+        "name": "$top",
+        "in": "query",
+        "description": "Show only the first n items, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)",
+        "schema": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "example": 50
+      },
+      "skip": {
+        "name": "$skip",
+        "in": "query",
+        "description": "Skip the first n items, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)",
+        "schema": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "count": {
+        "name": "$count",
+        "in": "query",
+        "description": "Include count of items, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "search": {
+        "name": "$search",
+        "in": "query",
+        "description": "Search items by search phrases, see [Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "responses": {
+      "error": {
+        "description": "Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/error"
+            }
+          }
+        }
+      }
+    }
+  }
+}

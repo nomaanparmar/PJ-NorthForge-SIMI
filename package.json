@@ -1,0 +1,108 @@
+{
+  "name": "northforge-invoice-triage",
+  "version": "1.0.0",
+  "description": "NorthForge Manufacturing — Intelligent Invoice Exception Handling with Agentic Triage (SAP BTP / CAP)",
+  "repository": "<add-your-git-remote>",
+  "dependencies": {
+    "@cap-js/sqlite": "^2.4",
+    "@sap-cloud-sdk/connectivity": "^4.9.1",
+    "@sap-cloud-sdk/http-client": "^4.9.1",
+    "@sap-cloud-sdk/resilience": "^4.9.1",
+    "@sap/cds": "^9",
+    "@sap/xssec": "^4",
+    "express": "^4",
+    "passport": "^0.7"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1.0.2",
+    "@sap/cds-dk": "^9",
+    "axios": "^1.20.0",
+    "jest": "^30.5.1"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "build": "cds build --production",
+    "test": "cds env && echo 'see test/ for HTTP-based service tests (run: npx cds bind + jest/mocha as configured)'"
+  },
+  "private": true,
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "url": "db.sqlite"
+        }
+      },
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "clerk1": {
+            "password": "clerk1",
+            "roles": [
+              "AP.Clerk"
+            ]
+          },
+          "supervisor1": {
+            "password": "supervisor1",
+            "roles": [
+              "AP.Clerk",
+              "AP.Supervisor"
+            ]
+          }
+        }
+      },
+      "API_PURCHASEORDER_PROCESS_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_PURCHASEORDER_PROCESS_SRV"
+      },
+      "genAIHub": {
+        "kind": "rest"
+      },
+      "messaging": {
+        "kind": "file-based-messaging"
+      },
+      "[production]": {
+        "auth": {
+          "kind": "xsuaa"
+        },
+        "API_PURCHASEORDER_PROCESS_SRV": {
+          "kind": "odata-v2",
+          "model": "srv/external/API_PURCHASEORDER_PROCESS_SRV",
+          "credentials": {
+            "destination": "S4HANA_SANDBOX",
+            "path": "/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV"
+          }
+        },
+        "genAIHub": {
+          "kind": "rest",
+          "credentials": {
+            "destination": "GENAI_HUB",
+            "requestTimeout": 30000
+          }
+        }
+      },
+      "[test]": {
+        "db": {
+          "kind": "sqlite",
+          "credentials": {
+            "url": ":memory:"
+          }
+        }
+      },
+      "[hybrid]": {
+        "API_PURCHASEORDER_PROCESS_SRV": {
+          "kind": "odata-v2",
+          "model": "srv/external/API_PURCHASEORDER_PROCESS_SRV",
+          "credentials": {
+            "destination": "S4HANA_SANDBOX",
+            "path": "/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV"
+          }
+        }
+      },
+      "connectivity": true,
+      "destinations": true,
+      "html5-repo": true
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "invoiceexceptions",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "ui5 build --clean-dest --all",
+    "start": "ui5 serve --open index.html"
+  },
+  "devDependencies": {
+    "@ui5/cli": "^3",
+    "@sap/ux-ui5-tooling": "^1",
+    "ui5-task-zipper": "^3"
+  }
+}

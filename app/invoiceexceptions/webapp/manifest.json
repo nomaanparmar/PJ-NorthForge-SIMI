@@ -1,0 +1,160 @@
+{
+  "_version": "1.59.0",
+  "sap.app": {
+    "id": "northforge.invoiceexceptions",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:lrop",
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/odata/v4/invoice/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "4.0"
+        }
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "northforge-invoiceexceptions-manage": {
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          },
+          "semanticObject": "InvoiceException",
+          "action": "manage"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "sap-icon://alert",
+      "favIcon": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.m": {},
+        "sap.f": {},
+        "sap.ui.core": {},
+        "sap.ushell": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true,
+          "groupProperties": {
+            "default": {
+              "submit": "Auto"
+            }
+          }
+        }
+      }
+    },
+    "resources": {
+      "css": []
+    },
+    "rootView": {
+      "viewName": "sap.fe.core.rootView.Fcl",
+      "type": "XML",
+      "async": true,
+      "id": "appRootView"
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.f.routing.Router"
+      },
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "InvoiceExceptionsList",
+          "target": "InvoiceExceptionsList",
+          "layout": "OneColumn"
+        },
+        {
+          "pattern": "InvoiceExceptions({key}):?query:",
+          "name": "InvoiceExceptionsObjectPage",
+          "target": ["InvoiceExceptionsList", "InvoiceExceptionsObjectPage"],
+          "layout": "TwoColumnsMidExpanded"
+        }
+      ],
+      "targets": {
+        "InvoiceExceptionsList": {
+          "type": "Component",
+          "id": "InvoiceExceptionsList",
+          "name": "sap.fe.templates.ListReport",
+          "controlAggregation": "beginColumnPages",
+          "options": {
+            "settings": {
+              "entitySet": "InvoiceExceptions",
+              "variantManagement": "Page",
+              "navigation": {
+                "InvoiceExceptions": {
+                  "detail": {
+                    "route": "InvoiceExceptionsObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable",
+                    "selectionMode": "None"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "InvoiceExceptionsObjectPage": {
+          "type": "Component",
+          "id": "InvoiceExceptionsObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "controlAggregation": "midColumnPages",
+          "options": {
+            "settings": {
+              "editableHeaderContent": false,
+              "entitySet": "InvoiceExceptions"
+            }
+          }
+        }
+      }
+    }
+  }
+}

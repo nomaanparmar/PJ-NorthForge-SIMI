@@ -1,0 +1,117 @@
+_schema-version: 3.3.0
+ID: northforge-invoice-triage
+version: 1.0.0
+description: "NorthForge Manufacturing — Intelligent Invoice Exception Handling with Agentic Triage (SAP BTP / CAP)"
+parameters:
+  enable-parallel-deployments: true
+  deploy_mode: html5-repo
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
+modules:
+  - name: northforge-invoice-triage-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      instances: 1
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: northforge-invoice-triage-auth
+      - name: northforge-invoice-triage-connectivity
+      - name: northforge-invoice-triage-destination
+
+  - name: northforge-invoice-triage-app-deployer
+    type: com.sap.application.content
+    path: gen
+    build-parameters:
+      build-result: app/
+      requires:
+        - name: northforgeinvoicetriageinvoiceexceptions
+          artifacts:
+            - invoiceexceptions.zip
+          target-path: app/
+    requires:
+      - name: northforge-invoice-triage-auth
+      - name: srv-api
+      - name: northforge-invoice-triage-html5-repo-host
+        parameters:
+          content-target: true
+          config:
+            HTML5Runtime_enabled: true
+
+  - name: northforgeinvoicetriageinvoiceexceptions
+    type: html5
+    path: app/invoiceexceptions
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: northforge-invoice-triage-approuter
+    type: approuter.nodejs
+    path: app/router
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: northforge-invoice-triage-auth
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: northforge-invoice-triage-html5-repo-runtime
+      - name: northforge-invoice-triage-destination
+      - name: northforge-invoice-triage-connectivity
+
+resources:
+  - name: northforge-invoice-triage-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: northforge-invoice-triage-${org}-${space}
+        tenant-mode: dedicated
+        oauth2-configuration:
+          credential-types:
+            - "binding-secret"
+            - "x509"
+  - name: northforge-invoice-triage-connectivity
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: connectivity
+      service-plan: lite
+  - name: northforge-invoice-triage-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+
+  - name: northforge-invoice-triage-html5-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+
+  - name: northforge-invoice-triage-html5-repo-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime

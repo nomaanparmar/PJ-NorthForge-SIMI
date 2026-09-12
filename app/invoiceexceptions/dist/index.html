@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NorthForge AP Exception Triage</title>
+  <style>
+    /*
+     * Some browser/host environments don't establish a height:100% cascade from
+     * <html>/<body> down through UI5's generated UIArea/ComponentContainer wrapper
+     * divs the way most deployments assume. When that cascade breaks, sap.m.Page /
+     * sap.f DynamicPage content collapses to 0 height and the app renders as a
+     * blank page below the shell bar, even though the DOM and data are correct
+     * (confirmed via devtools: every wrapper div in the chain measures 0px tall).
+     * CSS (not JS) on purpose: UI5 re-renders wipe inline styles a JS fixup would
+     * set, but a stylesheet rule keeps re-applying automatically on every render.
+     * The repeated "> div" chain covers the anonymous, class-less wrapper divs
+     * UI5 generates for nested Component/UIArea/NavContainer levels, which have
+     * no stable selector of their own.
+     */
+    html, body, #content { height: 100% !important; margin: 0 !important; padding: 0 !important; }
+    #content > div,
+    #content > div > div,
+    #content > div > div > div,
+    #content > div > div > div > div,
+    #content > div > div > div > div > div,
+    #content > div > div > div > div > div > div,
+    #content > div > div > div > div > div > div > div,
+    #content > div > div > div > div > div > div > div > div,
+    #content > div > div > div > div > div > div > div > div > div,
+    #content > div > div > div > div > div > div > div > div > div > div,
+    #content > div > div > div > div > div > div > div > div > div > div > div,
+    #content > div > div > div > div > div > div > div > div > div > div > div > div {
+      height: 100% !important;
+    }
+  </style>
+  <script
+    id="sap-ui-bootstrap"
+    src="https://ui5.sap.com/1.120.0/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_horizon"
+    data-sap-ui-resourceroots='{"northforge.invoiceexceptions": "./"}'
+    data-sap-ui-compatVersion="edge"
+    data-sap-ui-async="true"
+    data-sap-ui-frameOptions="trusted"
+    data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
+  ></script>
+</head>
+<body class="sapUiBody" id="content">
+  <div
+    data-sap-ui-component
+    data-name="northforge.invoiceexceptions"
+    data-id="container"
+    data-settings='{"id" : "invoiceexceptions"}'
+    data-handle-validation="true"
+  ></div>
+  <script>
+    // UI5's own ResizeHandler is broken in this environment (its legacy iframe-based
+    // size-change detection hits a Permissions-Policy violation: "unload is not
+    // allowed in this document"), so controls like sap.f.FlexibleColumnLayout that
+    // rely on it to re-measure after the browser window resizes keep using a stale
+    // width and leave a gap instead of filling the new size. The native window
+    // "resize" event always fires reliably regardless, so use that directly to force
+    // a full re-render (fresh column-width calculation) instead.
+    window.addEventListener('resize', function () {
+      if (!window.sap || !sap.ui || !sap.ui.core || !sap.ui.core.Element) return
+      Object.values(sap.ui.core.Element.registry.all()).forEach(function (c) {
+        if (c.getMetadata && c.getMetadata().getName() === 'sap.f.FlexibleColumnLayout') {
+          c.invalidate()
+        }
+      })
+    })
+  </script>
+</body>
+</html>

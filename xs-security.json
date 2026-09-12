@@ -1,0 +1,58 @@
+{
+  "xsappname": "northforge-invoice-triage",
+  "tenant-mode": "dedicated",
+  "description": "XSUAA security descriptor for the NorthForge AP Exception Triage service",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.AP_Clerk",
+      "description": "Can view exceptions and take approve/reject/edit actions within threshold"
+    },
+    {
+      "name": "$XSAPPNAME.AP_Supervisor",
+      "description": "Can additionally approve high-value invoices, escalate, and trigger re-triage"
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "AP_Clerk",
+      "description": "AP Clerk — processes routine invoice exceptions",
+      "scope-references": [
+        "$XSAPPNAME.AP_Clerk"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "AP_Supervisor",
+      "description": "AP Supervisor — handles escalations and high-value approvals",
+      "scope-references": [
+        "$XSAPPNAME.AP_Clerk",
+        "$XSAPPNAME.AP_Supervisor"
+      ],
+      "attribute-references": []
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "AP.Clerk",
+      "description": "Role collection assigned to AP clerks in SAP BTP Cockpit / Identity Authentication",
+      "role-template-references": [
+        "$XSAPPNAME.AP_Clerk"
+      ]
+    },
+    {
+      "name": "AP.Supervisor",
+      "description": "Role collection assigned to AP supervisors in SAP BTP Cockpit / Identity Authentication",
+      "role-template-references": [
+        "$XSAPPNAME.AP_Supervisor"
+      ]
+    }
+  ],
+  "oauth2-configuration": {
+    "redirect-uris": [
+      "https://*.cfapps.*.hana.ondemand.com/**"
+    ],
+    "token-validity": 3600,
+    "refresh-token-validity": 86400
+  }
+}
