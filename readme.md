@@ -12,9 +12,9 @@ routes to an AP clerk, or escalates to a supervisor.
 - **SQLite** locally / **SAP HANA Cloud** in production (`@cap-js/hana`)
 - **Fiori Elements** (List Report + Object Page) UI, OData V4
 - **XSUAA** mocked locally, real role collections defined in `xs-security.json`
-- **SAP Event Mesh** (mocked as file-based messaging locally) for `SupplierInvoice.Blocked` events
-- Mocked calls to the S/4HANA sandbox (`API_PURCHASEORDER_PROCESS_SRV`, via a Destination in
-  production) and to SAP Document Information Extraction (DOX)
+- Calls to the S/4HANA sandbox (`API_PURCHASEORDER_PROCESS_SRV`, via a real BTP Destination
+  in `[hybrid]`/`[production]`, a local mock otherwise) and a mocked SAP Document
+  Information Extraction (DOX) call
 
 ## Run it locally
 
@@ -44,10 +44,11 @@ check in `srv/invoice-service.js`).
 ### Try the agent
 
 On the Object Page of any `NEW` invoice exception, the **Retriage** action (supervisor
-only) runs the bounded investigation (fetch PO → fetch contract / recompute tax as
-relevant → check vendor history → decide) and writes a full audit trail visible in the
-**Audit Trail (Recommendation Log)** section. **Approve / Reject / Edit** are available
-to both roles, subject to the amount threshold.
+only) runs the bounded investigation (extract DOX fields for email-PDF invoices →
+fetch PO → fetch contract / recompute tax as relevant → check vendor history → decide)
+and writes a full audit trail visible in the **Audit Trail (Recommendation Log)**
+section. **Approve / Reject / Edit** are available to both roles, subject to the amount
+threshold.
 
 ## Tests
 
@@ -63,10 +64,10 @@ npx jest
 ## Project layout
 
 ```
-db/schema.cds              domain model (InvoiceExceptions, Vendors, Contracts, RecommendationLogs)
+db/schema.cds              domain model (InvoiceExceptions, InvoiceExceptionItems, Vendors, Contracts, RecommendationLogs)
 db/data/                   seed data for the demo
 srv/invoice-service.cds    service definition, actions, role restrictions
-srv/invoice-service.js     triage pipeline, S/4 call + retry, clerk actions, event handler
+srv/invoice-service.js     triage pipeline (DOX extraction, S/4 call + retry), clerk actions
 srv/external/              hand-authored subset of API_PURCHASEORDER_PROCESS_SRV
 srv/mocks/                 local mocks for the S/4 PO lookup and the DOX extraction call
 app/invoiceexceptions/     Fiori Elements List Report + Object Page app
@@ -75,9 +76,8 @@ xs-security.json           XSUAA scopes / role templates / role collections
 mta.yaml                   Cloud Foundry deployment topology
 ```
 
-See `docs/technical-design.md` for the full design writeup (data model rationale, API
-contract, deployment topology, security model, testing approach, and the clean-core /
-extensibility discussion).
+`docs/invoice-service.openapi.json` is the generated OpenAPI contract for the service
+(`cds compile srv --to openapi`).
 
 ## Learn more
 

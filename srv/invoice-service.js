@@ -37,6 +37,29 @@ module.exports = cds.service.impl(async function () {
       invoice_ID: invoice.ID, step: ++step, timestamp: new Date().toISOString(), ...fields
     })
 
+    // --- Step: EXTRACT_DOX_FIELDS — mocked SAP Document Information Extraction (DOX)
+    // call for unstructured (EMAIL_PDF) tail-spend invoices that arrived without
+    // parsed fields, e.g. a PO number scanned off a PDF rather than sent structured. ---
+    if (invoice.sourceChannel === 'EMAIL_PDF' && !invoice.extractedPayload) {
+      try {
+        const fields = await withRetry(() => extractInvoiceFields(invoice.invoiceNumber), { attempts: 3, baseDelayMs: 200 })
+        invoice.extractedPayload = JSON.stringify(fields)
+        invoice.extractionConfidence = fields.confidence
+        await UPDATE(InvoiceExceptions, invoice.ID).with({
+          extractedPayload: invoice.extractedPayload,
+          extractionConfidence: invoice.extractionConfidence
+        })
+        await log({
+          agentAction: 'EXTRACT_DOX_FIELDS',
+          groundingSources: JSON.stringify([{ type: 'DOXExtraction', id: invoice.invoiceNumber, source: 'document-information-extraction' }]),
+          reasoningTrace: `DOX extracted PO ${fields.poNumber || 'n/a'}/${fields.poItem || 'n/a'}, vendor "${fields.vendorNameOnDoc}", amount ${fields.grossAmount} ${fields.currency} at confidence ${fields.confidence}.`,
+          outcome: 'FETCHED'
+        })
+      } catch (err) {
+        await log({ agentAction: 'EXTRACT_DOX_FIELDS', reasoningTrace: `DOX extraction failed after retries: ${err.message}`, outcome: 'ERROR' })
+      }
+    }
+
     // --- Step: FETCH_PO — call the S/4 sandbox via destination, with retry ---
     let poItem = null
     if (invoice.purchaseOrder) {
@@ -145,31 +168,6 @@ module.exports = cds.service.impl(async function () {
 
     return SELECT.one.from(InvoiceExceptions, invoice.ID)
   }
-
-  // ---------------------------------------------------------------------
-  // Event Mesh consumption — new/blocked invoices arrive as CloudEvents,
-  // not via polling. Wired through CAP's messaging plugin (see package.json
-  // cds.requires.messaging); local dev uses the file-based transport automatically.
-  // ---------------------------------------------------------------------
-  this.on('SupplierInvoice.Blocked', async (msg) => {
-    const { invoiceNumber, companyCode, sourceChannel, vendorId, rawPayload } = msg.data
-    let extractedPayload, extractionConfidence
-    if (sourceChannel === 'EMAIL_PDF') {
-      try {
-        const fields = await withRetry(() => extractInvoiceFields(invoiceNumber), { attempts: 3, baseDelayMs: 200 })
-        extractedPayload = JSON.stringify(fields)
-        extractionConfidence = fields.confidence
-      } catch (err) {
-        console.error(`DOX extraction failed for ${invoiceNumber} after retries: ${err.message}`)
-        return
-      }
-    }
-    const created = await INSERT.into(InvoiceExceptions).entries({
-      invoiceNumber, companyCode, sourceChannel, vendor_ID: vendorId,
-      extractedPayload, extractionConfidence, status: 'NEW', ...rawPayload
-    })
-    return created
-  })
 })
 
 // --- helpers -------------------------------------------------------------

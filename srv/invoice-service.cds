@@ -38,6 +38,9 @@ service InvoiceService {
     action retriage() returns InvoiceExceptions;
   };
 
+  @readonly // populated at ingestion only; the header's edit action handles corrections
+  entity InvoiceExceptionItems as projection on db.InvoiceExceptionItems;
+
   entity Vendors as projection on db.Vendors;
   entity Contracts as projection on db.Contracts;
 
@@ -66,5 +69,9 @@ annotate InvoiceService.InvoiceExceptions with @(restrict: [
 ]);
 
 annotate InvoiceService.RecommendationLogs with @(restrict: [
+  { grant: 'READ', to: ['AP.Clerk', 'AP.Supervisor'] }
+]);
+
+annotate InvoiceService.InvoiceExceptionItems with @(restrict: [
   { grant: 'READ', to: ['AP.Clerk', 'AP.Supervisor'] }
 ]);

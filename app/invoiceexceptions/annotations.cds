@@ -1,5 +1,9 @@
 using InvoiceService as service from '../../srv/invoice-service';
 
+// No delete affordance: exceptions are closed via the controlled approve/rejectInvoice/
+// edit actions, never removed — keeps the SOX-style audit trail authoritative.
+annotate service.InvoiceExceptions with @(Capabilities.DeleteRestrictions.Deletable: false);
+
 annotate service.InvoiceExceptions with @(
   UI.HeaderInfo: {
     TypeName: 'Invoice Exception',
@@ -56,6 +60,12 @@ annotate service.InvoiceExceptions with @(
     },
     {
       $Type: 'UI.ReferenceFacet',
+      ID: 'LineItemsFacet',
+      Label: 'Invoice Line Items',
+      Target: 'items/@UI.LineItem'
+    },
+    {
+      $Type: 'UI.ReferenceFacet',
       ID: 'AuditTrailFacet',
       Label: 'Audit Trail (Recommendation Log)',
       Target: 'recommendations/@UI.LineItem'
@@ -102,6 +112,21 @@ annotate service.InvoiceExceptions actions {
   approve @(Common.SideEffects: { TargetProperties: ['status', 'clerkDecision'] });
   rejectInvoice @(Common.SideEffects: { TargetProperties: ['status', 'clerkDecision'] });
 };
+
+annotate service.InvoiceExceptionItems with @(
+  UI.LineItem: [
+    { Value: lineNumber,          Label: 'Line' },
+    { Value: material,            Label: 'Material' },
+    { Value: materialDescription, Label: 'Description' },
+    { Value: quantity,            Label: 'Qty' },
+    { Value: unitOfMeasure,       Label: 'UoM' },
+    { Value: unitPrice,           Label: 'Unit Price' },
+    { Value: netAmount,           Label: 'Net Amount' },
+    { Value: purchaseOrder,       Label: 'PO' },
+    { Value: purchaseOrderItem,   Label: 'PO Item' },
+    { Value: isExceptionLine,     Label: 'Flagged' }
+  ]
+);
 
 annotate service.RecommendationLogs with @(
   UI.LineItem: [

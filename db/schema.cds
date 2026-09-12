@@ -3,9 +3,8 @@ namespace com.northforge.invoice;
 using { cuid, managed, sap.common.CodeList } from '@sap/cds/common';
 
 /**
- * Core entity: one row per exception-flagged supplier invoice.
- * Populated by the ingestion event handler (SupplierInvoice.Blocked)
- * and enriched by the agentic triage pipeline.
+ * Core entity: one row per exception-flagged supplier invoice, ingested from
+ * EDI/Ariba/email-PDF channels and enriched by the agentic triage pipeline.
  */
 entity InvoiceExceptions : cuid, managed {
   // --- Header, as received from S/4 / EDI / DOX extraction ---
@@ -34,6 +33,13 @@ entity InvoiceExceptions : cuid, managed {
   extractedPayload    : LargeString; // raw JSON from DOX extraction result
   extractionConfidence: Decimal(3,2);
 
+  // --- Full itemized breakdown of the invoice as received. The header's own
+  // purchaseOrder/purchaseOrderItem above stays the authoritative "flagged line"
+  // that the triage agent investigates; items gives the reviewer the complete
+  // invoice content (including lines that are NOT in dispute), same as opening
+  // the actual invoice document. ---
+  items               : Composition of many InvoiceExceptionItems on items.invoice = $self;
+
   // --- Agentic triage outcome ---
   aiRecommendation    : Association to RecommendationLogs;
   status              : String(20) enum {
@@ -49,6 +55,24 @@ entity InvoiceExceptions : cuid, managed {
 }
 
 /**
+ * One row per line on the underlying invoice document. Populated alongside the
+ * header at ingestion time (from EDI/ARIBA payload or DOX line-level extraction).
+ */
+entity InvoiceExceptionItems : cuid {
+  invoice             : Association to InvoiceExceptions;
+  lineNumber          : String(6);      // invoice's own line number, distinct from the PO item
+  material            : String(40);
+  materialDescription : String(100);
+  quantity            : Decimal(13,3);
+  unitOfMeasure       : String(3);
+  unitPrice           : Decimal(15,2);
+  netAmount           : Decimal(15,2);  // this line's contribution to the invoice total
+  purchaseOrder       : String(10);
+  purchaseOrderItem   : String(5);
+  isExceptionLine     : Boolean default false; // true for the specific line the exception was raised against
+}
+
+/**
  * Immutable, append-only audit trail. One row per agent action/decision.
  * Never updated after insert — satisfies the SOX-style audit requirement.
  */
@@ -56,7 +80,7 @@ entity RecommendationLogs : cuid {
   invoice             : Association to InvoiceExceptions;
   step                : Integer;                    // ordinal within the agent's investigation trace
   agentAction         : String(40) enum {
-    FETCH_PO; FETCH_GR; FETCH_CONTRACT; RECOMPUTE_TAX; CHECK_VENDOR_HISTORY;
+    EXTRACT_DOX_FIELDS; FETCH_PO; FETCH_GR; FETCH_CONTRACT; RECOMPUTE_TAX; CHECK_VENDOR_HISTORY;
     PROPOSE_RESOLUTION; ROUTE_TO_HUMAN; ESCALATE; HUMAN_DECISION;
   };
   timestamp           : DateTime;

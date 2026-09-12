@@ -2,6 +2,7 @@ node_modules/
 target/
 _out/
 gen/
+app/invoiceexceptions/dist/
 
 .cdsrc-private.json
 default-*.json

@@ -59,9 +59,6 @@
       "genAIHub": {
         "kind": "rest"
       },
-      "messaging": {
-        "kind": "file-based-messaging"
-      },
       "[production]": {
         "auth": {
           "kind": "xsuaa"
