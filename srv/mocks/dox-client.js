@@ -8,7 +8,8 @@
  */
 const CANNED_EXTRACTIONS = {
   'INV-7788-A': { poNumber: null, poItem: null, vendorNameOnDoc: 'Manitoba Industrial Coatings Co.', grossAmount: 4180.00, currency: 'CAD', confidence: 0.78 },
-  'INV-5521': { poNumber: '4500001601', poItem: '20', vendorNameOnDoc: 'Manitoba Industrial Coatings Co.', grossAmount: 2210.00, currency: 'CAD', confidence: 0.94 }
+  'INV-5521': { poNumber: '4500001601', poItem: '20', vendorNameOnDoc: 'Manitoba Industrial Coatings Co.', grossAmount: 2210.00, currency: 'CAD', confidence: 0.94 },
+  'INV-9034-C': { poNumber: null, poItem: null, vendorNameOnDoc: 'Northern Rail Components Inc.', grossAmount: 1731.60, currency: 'CAD', confidence: 0.55 }
 }
 
 let callCount = 0

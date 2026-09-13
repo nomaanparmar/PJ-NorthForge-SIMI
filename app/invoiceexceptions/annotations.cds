@@ -111,6 +111,13 @@ annotate service.InvoiceExceptions with {
 annotate service.InvoiceExceptions actions {
   approve @(Common.SideEffects: { TargetProperties: ['status', 'clerkDecision'] });
   rejectInvoice @(Common.SideEffects: { TargetProperties: ['status', 'clerkDecision'] });
+  // Without this, the Audit Trail table (bound to the `recommendations` to-many
+  // navigation) never gets told to refetch after retriage writes new log rows —
+  // the object page kept showing stale data until a manual browser refresh.
+  retriage @(Common.SideEffects: {
+    TargetProperties: ['status', 'confidenceScore', 'slaDueAt', 'assignedTo', 'extractedPayload', 'extractionConfidence'],
+    TargetEntities: [recommendations]
+  });
 };
 
 annotate service.InvoiceExceptionItems with @(

@@ -1,4 +1,4 @@
-const { recomputeProvincialTax, computeConfidence, withRetry } = require('../srv/invoice-service')
+const { recomputeProvincialTax, computeConfidence, withRetry } = require('../srv/triage-orchestration-service')
 
 describe('recomputeProvincialTax — provincial tax matrix (AP policy sec. 3.4)', () => {
   test('SK invoice under-taxed (GST-only) is flagged out of tolerance', () => {

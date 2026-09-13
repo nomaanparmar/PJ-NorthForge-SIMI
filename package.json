@@ -95,6 +95,13 @@
             "destination": "S4HANA_SANDBOX",
             "path": "/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV"
           }
+        },
+        "genAIHub": {
+          "kind": "rest",
+          "credentials": {
+            "destination": "GENAI_HUB",
+            "requestTimeout": 30000
+          }
         }
       },
       "connectivity": true,

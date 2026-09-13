@@ -1,26 +1,28 @@
 /**
  * Real LLM call for the triage decision step.
  *
- * Production path: routed through SAP Generative AI Hub via a bound BTP
- * Destination (see package.json cds.requires.genAIHub, [production] profile —
- * destination "GENAI_HUB"). This satisfies the data-residency constraint in the
- * brief: no direct cross-border call to a public LLM endpoint from app code —
- * the Destination service holds the endpoint + credentials (an OAuth2 technical
- * user, typically), centrally managed and rotatable without redeploying this
- * service. cds.connect.to() resolves and authenticates that destination for us.
+ * Routed exclusively through a BTP Destination (see package.json
+ * cds.requires.genAIHub, [production]/[hybrid] profile — destination
+ * "GENAI_HUB") pointed directly at https://api.anthropic.com, same technique
+ * as the S4HANA_SANDBOX destination — Authentication: NoAuthentication, with
+ * the API key injected via an "URL.headers.x-api-key" additional property.
+ * The Destination service holds the endpoint + key, centrally managed and
+ * rotatable without redeploying this service; cds.connect.to() resolves it.
  *
- * Local dev fallback: when no genAIHub destination is bound (i.e. running
- * locally without a BTP Destination service), calls the Anthropic API directly
- * using a key from ANTHROPIC_API_KEY, purely for convenience while developing.
- * Neither present -> returns null, and the caller falls back to deterministic
- * rule-based scoring. An LLM outage (either path) must never block triage.
+ * No direct-call fallback: if no genAIHub destination is bound (e.g. running
+ * locally on the default/[test] profile without `cds bind`), this returns
+ * null and the caller falls back to deterministic rule-based scoring. An LLM
+ * outage must never block triage — it only makes that invoice's disposition
+ * less precise.
  */
 const cds = require('@sap/cds')
 
 const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-5'
-// Real SAP AI Core / Generative AI Hub deployments are addressed by a deployment
-// id under this path shape; set once the destination's target deployment exists.
-const GENAI_HUB_PATH = process.env.GENAI_HUB_DEPLOYMENT_PATH || '/v2/inference/deployments/anthropic-claude/invoke'
+const ANTHROPIC_API_VERSION = '2023-06-01'
+// Real path on Anthropic's own API — same endpoint/shape whether called
+// directly or through the destination, since the destination just points at
+// api.anthropic.com rather than at some other proxy/orchestration layer.
+const GENAI_HUB_PATH = process.env.GENAI_HUB_DEPLOYMENT_PATH || '/v1/messages'
 
 const SYSTEM_PROMPT = `You are an AP invoice-exception triage assistant for NorthForge Manufacturing, a Canadian industrial manufacturer. \
 You are given the facts an upstream system has already gathered for one flagged supplier invoice (PO data, contract terms, recomputed tax, vendor history) — you do not fetch anything yourself. \
@@ -28,43 +30,25 @@ Decide whether this exception can be safely auto-resolved, should be routed to a
 Ground every claim in the facts provided; do not invent PO numbers, amounts, or policy clauses that were not given to you. \
 Be conservative: prefer ROUTE_TO_CLERK over AUTO_RESOLVE whenever the facts are incomplete or the variance has more than one plausible explanation.`
 
-async function getTriageRecommendation ({ invoice, poItem, contract, taxRecompute, overrideRate }) {
-  const userPrompt = buildPrompt({ invoice, poItem, contract, taxRecompute, overrideRate })
+async function getTriageRecommendation ({ invoice, poItem, contract, taxRecompute, overrideRate, gr }) {
+  if (!cds.requires.genAIHub?.credentials) return null
+
+  const userPrompt = buildPrompt({ invoice, poItem, contract, taxRecompute, overrideRate, gr })
   const requestBody = buildRequestBody(userPrompt)
-
-  if (cds.requires.genAIHub?.credentials) {
-    const data = await callViaDestination(requestBody)
-    return parseResponse(data, userPrompt)
-  }
-
-  const apiKey = process.env.ANTHROPIC_API_KEY
-  if (!apiKey) return null
-  const data = await callAnthropicDirect(requestBody, apiKey)
+  const data = await callViaDestination(requestBody)
   return parseResponse(data, userPrompt)
 }
 
 async function callViaDestination (requestBody) {
   const hub = await cds.connect.to('genAIHub')
-  return hub.send({ method: 'POST', path: GENAI_HUB_PATH, data: requestBody })
-}
-
-async function callAnthropicDirect (requestBody, apiKey) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  // x-api-key comes from the destination's own "URL.headers.x-api-key" property —
+  // never set here. anthropic-version isn't secret, so it's fine as a per-request header.
+  return hub.send({
     method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify(requestBody)
+    path: GENAI_HUB_PATH,
+    data: requestBody,
+    headers: { 'anthropic-version': ANTHROPIC_API_VERSION }
   })
-  if (!res.ok) {
-    const body = await res.text().catch(() => '')
-    const err = new Error(`Anthropic API call failed: ${res.status} ${body}`.slice(0, 500))
-    err.code = res.status
-    throw err
-  }
-  return res.json()
 }
 
 function buildRequestBody (userPrompt) {
@@ -103,7 +87,7 @@ function parseResponse (data, userPrompt) {
   }
 }
 
-function buildPrompt ({ invoice, poItem, contract, taxRecompute, overrideRate }) {
+function buildPrompt ({ invoice, poItem, contract, taxRecompute, overrideRate, gr }) {
   const lines = [
     `Invoice ${invoice.invoiceNumber}, exception type: ${invoice.exceptionType_code}.`,
     `Reason flagged: ${invoice.exceptionReasonText}`,
@@ -119,6 +103,11 @@ function buildPrompt ({ invoice, poItem, contract, taxRecompute, overrideRate })
   }
   if (taxRecompute) {
     lines.push(`Recomputed expected tax: ${taxRecompute.expectedTax.toFixed(2)} vs invoiced ${invoice.taxAmount} (variance ${taxRecompute.variance.toFixed(2)}).`)
+  }
+  if (invoice.exceptionType_code === 'MISSING_GR') {
+    lines.push(gr
+      ? `Goods receipt ${gr.grDocument} has since been posted (qty ${gr.quantityReceived}, ${gr.postingDate}).`
+      : `No goods receipt has been posted yet against this PO item.`)
   }
   lines.push(`Historical clerk-override rate for this vendor: ${(overrideRate * 100).toFixed(0)}%.`)
   lines.push(`In-scope ceiling for auto-resolution is $250,000 CAD; this invoice is ${invoice.grossAmount <= 250000 ? 'within' : 'over'} that ceiling.`)

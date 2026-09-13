@@ -3,3 +3,4 @@ ID,vendorNumber,name,province,taxId,isTailSpend,paymentTermsDays,earlyPaymentDis
 8f14e45f-cf35-4c37-9b1b-000000000002,0000100567,Prairie Bearings & Supply Inc.,SK,73398211RT0001,true,45,1.50
 8f14e45f-cf35-4c37-9b1b-000000000003,0000100891,Manitoba Industrial Coatings Co.,MB,65120987RT0001,true,30,0.00
 8f14e45f-cf35-4c37-9b1b-000000000004,0000101045,Fort Nordale Hydraulics Ltd.,AB,91876234RT0001,false,60,2.50
+8f14e45f-cf35-4c37-9b1b-000000000005,0000101289,Northern Rail Components Inc.,SK,88214567RT0001,true,45,1.00
