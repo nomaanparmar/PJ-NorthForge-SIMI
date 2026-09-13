@@ -49,6 +49,12 @@
               "AP.Clerk",
               "AP.Supervisor"
             ]
+          },
+          "auditor1": {
+            "password": "auditor1",
+            "roles": [
+              "AP.Auditor"
+            ]
           }
         }
       },

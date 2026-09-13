@@ -60,18 +60,27 @@ service InvoiceService {
 
 annotate InvoiceService with @(requires: 'authenticated-user');
 
-// Read: any authenticated AP user. Write/actions: gated per-action in the handler
-// (clerk vs supervisor, plus amount-threshold checks) — see invoice-service.js.
+// Read visibility is segregated by role — a supervisor sees the whole book (including
+// escalations), a clerk sees only what's in their own queue: exceptions already assigned
+// to them (any status — keeps their resolution history visible), or still-unclaimed rows
+// sitting in ROUTED_TO_CLERK (the shared queue anyone with AP.Clerk can pick up). A clerk
+// never sees NEW/INVESTIGATING (not yet triaged) or ESCALATED (supervisor-only) rows.
+// Write/actions: gated per-action in the handler (clerk vs supervisor, plus amount-threshold
+// checks) — see invoice-service.js.
+// AP.Auditor is read-only everywhere and unrestricted (no assignedTo/ownership filter —
+// internal audit/SOX-compliance review needs the whole book, same as a supervisor's view,
+// but with zero grant on any of the actions below).
 annotate InvoiceService.InvoiceExceptions with @(restrict: [
-  { grant: 'READ',                          to: ['AP.Clerk', 'AP.Supervisor'] },
+  { grant: 'READ', to: ['AP.Supervisor', 'AP.Auditor'] },
+  { grant: 'READ', to: ['AP.Clerk'], where: 'assignedTo = $user or (assignedTo is null and status = ''ROUTED_TO_CLERK'')' },
   { grant: ['approve', 'rejectInvoice', 'edit'], to: ['AP.Clerk', 'AP.Supervisor'] },
   { grant: 'retriage',                       to: ['AP.Supervisor'] }
 ]);
 
 annotate InvoiceService.RecommendationLogs with @(restrict: [
-  { grant: 'READ', to: ['AP.Clerk', 'AP.Supervisor'] }
+  { grant: 'READ', to: ['AP.Clerk', 'AP.Supervisor', 'AP.Auditor'] }
 ]);
 
 annotate InvoiceService.InvoiceExceptionItems with @(restrict: [
-  { grant: 'READ', to: ['AP.Clerk', 'AP.Supervisor'] }
+  { grant: 'READ', to: ['AP.Clerk', 'AP.Supervisor', 'AP.Auditor'] }
 ]);
