@@ -4,12 +4,16 @@
   "description": "XSUAA security descriptor for the NorthForge AP Exception Triage service",
   "scopes": [
     {
-      "name": "$XSAPPNAME.AP_Clerk",
+      "name": "$XSAPPNAME.AP.Clerk",
       "description": "Can view exceptions and take approve/reject/edit actions within threshold"
     },
     {
-      "name": "$XSAPPNAME.AP_Supervisor",
+      "name": "$XSAPPNAME.AP.Supervisor",
       "description": "Can additionally approve high-value invoices, escalate, and trigger re-triage"
+    },
+    {
+      "name": "$XSAPPNAME.AP.Auditor",
+      "description": "Read-only access to invoice exceptions and the recommendation audit trail; cannot approve, reject, edit, or trigger re-triage"
     }
   ],
   "attributes": [],
@@ -18,7 +22,7 @@
       "name": "AP_Clerk",
       "description": "AP Clerk — processes routine invoice exceptions",
       "scope-references": [
-        "$XSAPPNAME.AP_Clerk"
+        "$XSAPPNAME.AP.Clerk"
       ],
       "attribute-references": []
     },
@@ -26,8 +30,16 @@
       "name": "AP_Supervisor",
       "description": "AP Supervisor — handles escalations and high-value approvals",
       "scope-references": [
-        "$XSAPPNAME.AP_Clerk",
-        "$XSAPPNAME.AP_Supervisor"
+        "$XSAPPNAME.AP.Clerk",
+        "$XSAPPNAME.AP.Supervisor"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "AP_Auditor",
+      "description": "AP Auditor — internal audit / SOX-compliance read-only reviewer",
+      "scope-references": [
+        "$XSAPPNAME.AP.Auditor"
       ],
       "attribute-references": []
     }
@@ -45,6 +57,13 @@
       "description": "Role collection assigned to AP supervisors in SAP BTP Cockpit / Identity Authentication",
       "role-template-references": [
         "$XSAPPNAME.AP_Supervisor"
+      ]
+    },
+    {
+      "name": "AP.Auditor",
+      "description": "Role collection assigned to internal auditors / SOX compliance reviewers in SAP BTP Cockpit / Identity Authentication",
+      "role-template-references": [
+        "$XSAPPNAME.AP_Auditor"
       ]
     }
   ],
